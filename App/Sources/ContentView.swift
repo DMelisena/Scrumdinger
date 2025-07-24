@@ -30,6 +30,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("MVVM", systemImage: "person.crop.circle")
                 }
+            MeetingView()
+                .tabItem {
+                    Label("MeetingView", systemImage: "person.crop.circle")
+                }
         }
     }
 
