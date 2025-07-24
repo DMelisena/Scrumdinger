@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MeetingView: View {
+    @ObserveInjection var redraw
     var body: some View {
         VStack {
             ProgressView(value: 5, total: 15)
@@ -45,6 +46,7 @@ struct MeetingView: View {
                 .accessibilityLabel("Next speaker")
             }
         }
+        .enableInjection()
 
         .padding()
     }

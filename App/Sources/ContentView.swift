@@ -1,3 +1,4 @@
+@_exported import HotSwiftUI
 import SwiftUI
 
 struct ContentView: View {
@@ -15,6 +16,7 @@ struct ContentView: View {
         controller = UserController(user: userMVC)
     }
 
+    @ObserveInjection var redraw
     var body: some View {
         TabView {
             defaultView
@@ -35,6 +37,12 @@ struct ContentView: View {
                     Label("MeetingView", systemImage: "person.crop.circle")
                 }
         }
+        .onAppear {
+            #if DEBUG
+                Bundle(path: "/Applications/InjectionIII.app/Contents/Resources/iOSInjection.bundle")?.load()
+            #endif
+        }
+        .enableInjection()
     }
 
     private var defaultView: some View {
