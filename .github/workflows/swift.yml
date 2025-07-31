@@ -22,10 +22,14 @@ jobs:
       # This step builds the Swift project.
       - name: Build
         run: swift build -v
+        # The project files are likely in a sub-directory, so we specify the working directory.
+        working-directory: Scrumdinger
 
       # This step runs the project's tests.
       - name: Run tests
         run: swift test -v
+        # The project files are likely in a sub-directory, so we specify the working directory.
+        working-directory: Scrumdinger
 
   # This job is named 'lint' and will also run on a macOS runner.
   # It depends on the 'build-and-test' job, so it will only run if that job is successful.
