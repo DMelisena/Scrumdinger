@@ -1,28 +1,15 @@
-# This workflow will build a Swift project and run its tests.
-name: Swift CI
-
-# This defines when the workflow will run.
+name: test
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-
-# A workflow run is made up of one or more jobs.
+    branches:
+      - main
+  push:
+    branches:
+      - main
 jobs:
-  # This job is named 'build-and-test' and will be executed on a macOS runner.
-  build-and-test:
+  lint:
     runs-on: macos-latest
-
-    # A job contains a sequence of steps.
     steps:
-      # This step checks out your repository code.
-      - uses: actions/checkout@v4
-
-      # This step builds the Swift project.
-      - name: Build
-        run: swift build -v
-
-      # This step runs the project's tests.
-      - name: Run tests
-        run: swift test -v
+      - uses: actions/checkout@v3
+      - run: brew install --formula tuist@x.y.z
+      - run: tuist build
