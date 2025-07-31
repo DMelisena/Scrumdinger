@@ -11,5 +11,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - run: brew install --formula tuist@x.y.z
+      - run: brew install tuist
+      - run: tuist install
       - run: tuist build
