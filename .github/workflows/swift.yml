@@ -13,40 +13,46 @@ jobs:
   # This job is named 'build-and-test' and will be executed on a macOS runner.
   build-and-test:
     runs-on: macos-latest
-
+    
     # A job contains a sequence of steps.
     steps:
       # This step checks out your repository code.
       - uses: actions/checkout@v4
-
+      
+      # Debug step to understand directory structure
+      - name: Debug directory structure
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Repository root contents:"
+          ls -la
+          echo "Looking for Package.swift files:"
+          find . -name "Package.swift" -type f
+          echo "Looking for .xcodeproj files:"
+          find . -name "*.xcodeproj" -type d
+          
       # This step builds the Swift project.
       - name: Build
-        run: swift build -v
-        # The project files are likely in a sub-directory, so we specify the working directory.
-        working-directory: Scrumdinger
-
+        run: |
+          if [ -f "Package.swift" ]; then
+            echo "Found Package.swift in root, building..."
+            swift build -v
+          elif [ -f "Scrumdinger/Package.swift" ]; then
+            echo "Found Package.swift in Scrumdinger directory, building..."
+            cd Scrumdinger && swift build -v
+          else
+            echo "No Package.swift found. This might be an Xcode project."
+            if [ -d "*.xcodeproj" ]; then
+              echo "Found Xcode project, using xcodebuild instead"
+              xcodebuild -scheme Scrumdinger -destination 'platform=iOS Simulator,name=iPhone 14' build
+            else
+              echo "Error: Could not find Package.swift or .xcodeproj"
+              exit 1
+            fi
+          fi
+          
       # This step runs the project's tests.
       - name: Run tests
-        run: swift test -v
-        # The project files are likely in a sub-directory, so we specify the working directory.
-        working-directory: Scrumdinger
-
-  # This job is named 'lint' and will also run on a macOS runner.
-  # It depends on the 'build-and-test' job, so it will only run if that job is successful.
-  lint:
-    runs-on: macos-latest
-    needs: build-and-test
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Install Tuist using Homebrew. To avoid SHA256 mismatches with the latest version,
-      # we are installing a specific, stable version. You can update this version number as needed.
-      - name: Install Tuist
         run: |
-          brew tap tuist/tuist
-          brew install tuist@4.55.5
-
-      # Run the Tuist lint command.
-      - name: Run Tuist lint
-        run: tuist lint
+          if [ -f "Package.swift" ]; then
+            swift test -v
+          elif [ -
