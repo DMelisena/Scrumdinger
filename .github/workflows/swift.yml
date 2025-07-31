@@ -35,5 +35,3 @@ jobs:
       - uses: actions/checkout@v3
       - run: brew install --formula tuist@x.y.z
       - run: tuist build
-
-kalo nambahin ini langsung ke swift.yml aja ato buat ymal baru lagi deh??
