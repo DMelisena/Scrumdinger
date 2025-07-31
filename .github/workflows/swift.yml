@@ -1,16 +1,48 @@
-name: test
+# This workflow will build a Swift project, run its tests, and perform linting.
+name: Swift CI
+
+# This defines when the workflow will run.
 on:
-  pull_request:
-    branches:
-      - main
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow run is made up of one or more jobs.
 jobs:
+  # This job is named 'build-and-test' and will be executed on a macOS runner.
+  build-and-test:
+    runs-on: macos-latest
+
+    # A job contains a sequence of steps.
+    steps:
+      # This step checks out your repository code.
+      - uses: actions/checkout@v4
+
+      # This step builds the Swift project.
+      - name: Build
+        run: swift build -v
+
+      # This step runs the project's tests.
+      - name: Run tests
+        run: swift test -v
+
+  # This job is named 'lint' and will also run on a macOS runner.
+  # It depends on the 'build-and-test' job, so it will only run if that job is successful.
   lint:
     runs-on: macos-latest
+    needs: build-and-test
+
     steps:
-      - uses: actions/checkout@v3
-      - run: brew install tuist
-      - run: tuist install
-      - run: tuist build
+      - uses: actions/checkout@v4
+
+      # Install Tuist using Homebrew. To avoid SHA256 mismatches with the latest version,
+      # we are installing a specific, stable version. You can update this version number as needed.
+      - name: Install Tuist
+        run: |
+          brew tap tuist/tuist
+          brew install tuist@4.55.5
+
+      # Run the Tuist lint command.
+      - name: Run Tuist lint
+        run: tuist lint
