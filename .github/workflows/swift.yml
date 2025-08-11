@@ -25,7 +25,11 @@ jobs:
         uses: jdx/mise-action@v2
 
       # 3. Run a Tuist command (e.g., build)
-      # The TUIST_CONFIG_TOKEN is automatically used for authentication.
+      - name: Install Dependencies
+        run: tuist install
+        env:
+          TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_TOKEN }}
+      # 4. Run a Tuist command (e.g., build)
       - name: Build project
         run: tuist build
         env:
