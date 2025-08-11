@@ -35,3 +35,9 @@ jobs:
         run: tuist install
         env:
           TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_TOKEN}}
+
+      # 5. Run Tuist build
+      - name: Install dependencies
+        run: tuist build
+        env:
+          TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_TOKEN}}
