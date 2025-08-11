@@ -1,0 +1,32 @@
+# .github/workflows/tuist.yml
+
+name: Tuist CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: macos-latest
+
+    steps:
+      # 1. Check out your repository's code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install Mise and the Tuist version from your .tool-versions file
+      - name: Setup Mise and Tuist
+        uses: jdx/mise-action@v2
+
+      # 3. Run a Tuist command (e.g., build)
+      # The TUIST_CONFIG_TOKEN is automatically used for authentication.
+      - name: Build project
+        run: tuist build
+        env:
+          TUIST_CONFIG_TOKEN: ${{ secrets.TUIST_TOKEN }}
