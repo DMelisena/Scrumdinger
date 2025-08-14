@@ -20,6 +20,7 @@ let project = Project(
             resources: ["App/Resources/**"],
             dependencies: [
                 .external(name: "HotSwiftUI"),
+                .external(name: "GoogleGenerativeAI"),
                 // .external(name: "Inject"),
             ],
             settings: .settings(
